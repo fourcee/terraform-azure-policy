@@ -8,9 +8,9 @@ resource "azurerm_policy_set_definition" "this" {
   metadata   = var.metadata
   parameters = var.parameters
 
-  # Use policy_definition_reference if provided, otherwise create simple references from policy_definition_ids
+  # Use advanced_policy_references if provided, otherwise create simple references from policy_definition_ids
   dynamic "policy_definition_reference" {
-    for_each = var.policy_definition_reference != null ? var.policy_definition_reference : [
+    for_each = var.advanced_policy_references != null ? var.advanced_policy_references : [
       for id in var.policy_definition_ids : {
         policy_definition_id = id
         parameter_values     = null

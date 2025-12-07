@@ -39,9 +39,14 @@ variable "location" {
 }
 
 variable "identity_type" {
-  description = "The type of identity to use for the policy assignment (SystemAssigned, UserAssigned, or None)"
+  description = "The type of identity to use for the policy assignment (SystemAssigned or UserAssigned)"
   type        = string
   default     = null
+
+  validation {
+    condition     = var.identity_type == null || contains(["SystemAssigned", "UserAssigned"], var.identity_type)
+    error_message = "identity_type must be either 'SystemAssigned' or 'UserAssigned'."
+  }
 }
 
 variable "parameters" {
@@ -60,6 +65,11 @@ variable "enforcement_mode" {
   description = "The enforcement mode for the policy assignment (Default or DoNotEnforce)"
   type        = string
   default     = "Default"
+
+  validation {
+    condition     = contains(["Default", "DoNotEnforce"], var.enforcement_mode)
+    error_message = "enforcement_mode must be either 'Default' or 'DoNotEnforce'."
+  }
 }
 
 variable "not_scopes" {

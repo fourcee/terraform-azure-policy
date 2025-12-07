@@ -51,7 +51,7 @@ resource "azurerm_subscription_policy_assignment" "this" {
   }
 
   name                 = var.name
-  subscription_id      = each.value.scope
+  subscription_id      = replace(each.value.scope, "/subscriptions/", "")
   policy_definition_id = var.policy_id
   display_name         = var.display_name != null ? var.display_name : var.name
   description          = var.description

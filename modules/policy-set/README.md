@@ -36,7 +36,7 @@ module "policy_set" {
 | metadata | The metadata for the policy set definition | `string` | `null` | no |
 | parameters | Parameters for the policy set definition | `string` | `null` | no |
 | management_group_id | The management group ID where the policy set definition will be created (optional) | `string` | `null` | no |
-| policy_definition_reference | Optional list of policy definition references with parameters | `list(object)` | `null` | no |
+| advanced_policy_references | Optional list of policy definition references with parameters. If provided, this takes precedence over policy_definition_ids | `list(object)` | `null` | no |
 
 ## Outputs
 

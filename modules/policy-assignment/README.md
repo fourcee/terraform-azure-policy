@@ -73,7 +73,7 @@ module "policy_assignment" {
 | management_group_ids | List of management group IDs to assign the policy to | `list(string)` | `[]` | no |
 | subscription_ids | List of subscription IDs to assign the policy to | `list(string)` | `[]` | no |
 | location | The location for the policy assignment (required if using managed identity) | `string` | `null` | no |
-| identity_type | The type of identity to use for the policy assignment (SystemAssigned, UserAssigned, or None) | `string` | `null` | no |
+| identity_type | The type of identity to use for the policy assignment (SystemAssigned or UserAssigned) | `string` | `null` | no |
 | parameters | Parameters for the policy assignment | `string` | `null` | no |
 | metadata | The metadata for the policy assignment | `string` | `null` | no |
 | enforcement_mode | The enforcement mode for the policy assignment (Default or DoNotEnforce) | `string` | `"Default"` | no |

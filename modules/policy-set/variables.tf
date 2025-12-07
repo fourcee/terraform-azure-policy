@@ -43,8 +43,8 @@ variable "management_group_id" {
   default     = null
 }
 
-variable "policy_definition_reference" {
-  description = "Optional list of policy definition references with parameters"
+variable "advanced_policy_references" {
+  description = "Optional list of policy definition references with parameters. If provided, this takes precedence over policy_definition_ids"
   type = list(object({
     policy_definition_id = string
     parameter_values     = optional(string)
