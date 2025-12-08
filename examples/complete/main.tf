@@ -114,3 +114,35 @@ module "audit_assignment" {
     "00000000-0000-0000-0000-000000000003"
   ]
 }
+
+# Example 7: Assign with policy exemptions
+module "assignment_with_exemptions" {
+  source = "../../modules/policy-assignment"
+
+  name        = "governance-with-exemptions"
+  description = "Governance policy with exemptions for specific scopes"
+  policy_id   = module.governance_initiative.id
+
+  subscription_ids = [
+    "00000000-0000-0000-0000-000000000004"
+  ]
+
+  # Create exemptions for specific scopes
+  exemptions = [
+    {
+      scope              = "/subscriptions/00000000-0000-0000-0000-000000000005"
+      name               = "dev-subscription-waiver"
+      exemption_category = "Waiver"
+      display_name       = "Development Subscription Waiver"
+      description        = "Temporary waiver for development subscription during testing phase"
+      expires_on         = "2025-12-31T23:59:59Z"
+    },
+    {
+      scope              = "/subscriptions/00000000-0000-0000-0000-000000000004/resourceGroups/sandbox-rg"
+      name               = "sandbox-rg-exemption"
+      exemption_category = "Mitigated"
+      display_name       = "Sandbox Resource Group Exemption"
+      description        = "Risk mitigated through isolated network configuration"
+    }
+  ]
+}

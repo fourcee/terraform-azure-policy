@@ -77,3 +77,37 @@ variable "not_scopes" {
   type        = list(string)
   default     = []
 }
+
+variable "exemptions" {
+  description = <<-EOT
+    List of policy exemptions to create. Each exemption must specify:
+    - scope: The scope ID (management group, subscription, or resource group)
+    - name: A unique name for the exemption
+    - exemption_category: Either 'Waiver' or 'Mitigated'
+    - policy_assignment_id: (Optional) The policy assignment ID to exempt from. If not specified, uses the first assignment created by this module
+    - display_name: (Optional) Display name for the exemption
+    - description: (Optional) Description for the exemption
+    - expires_on: (Optional) Expiration date in RFC3339 format
+    - policy_definition_reference_ids: (Optional) List of policy definition reference IDs to exempt (for policy sets)
+    - metadata: (Optional) JSON string of metadata
+  EOT
+  type = list(object({
+    scope                           = string
+    name                            = string
+    exemption_category              = string
+    policy_assignment_id            = optional(string)
+    display_name                    = optional(string)
+    description                     = optional(string)
+    expires_on                      = optional(string)
+    policy_definition_reference_ids = optional(list(string))
+    metadata                        = optional(string)
+  }))
+  default = []
+
+  validation {
+    condition = alltrue([
+      for e in var.exemptions : contains(["Waiver", "Mitigated"], e.exemption_category)
+    ])
+    error_message = "exemption_category must be either 'Waiver' or 'Mitigated'."
+  }
+}
