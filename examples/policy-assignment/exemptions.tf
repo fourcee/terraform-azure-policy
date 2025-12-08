@@ -39,7 +39,7 @@ module "policy_assignment_with_exemptions" {
       name               = "rg-legacy-waiver"
       exemption_category = "Waiver"
       display_name       = "Legacy Resource Group Exemption"
-      description        = "Exemption for legacy resource group during decomissioning"
+      description        = "Exemption for legacy resource group during decommissioning"
       expires_on         = "2026-06-30T23:59:59Z"
     }
   ]

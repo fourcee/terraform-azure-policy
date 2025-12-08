@@ -27,6 +27,11 @@ locals {
         startswith(exemption.scope, "/subscriptions/") && contains(split("/", exemption.scope), "resourceGroups") ? "resource_group" :
         "unknown"
       )
+      # Extract subscription ID from resource group or subscription scope
+      extracted_subscription_id = (
+        startswith(exemption.scope, "/subscriptions/") ? 
+        split("/", exemption.scope)[2] : null
+      )
     })
   }
 
@@ -95,9 +100,8 @@ resource "azurerm_management_group_policy_exemption" "this" {
 
   name                = each.value.name
   management_group_id = each.value.scope
-  policy_assignment_id = coalesce(
-    each.value.policy_assignment_id,
-    try(azurerm_management_group_policy_assignment.this[each.value.scope].id, null),
+  policy_assignment_id = (
+    each.value.policy_assignment_id != null ? each.value.policy_assignment_id :
     length(local.all_assignment_ids) > 0 ? local.all_assignment_ids[0] : null
   )
   exemption_category              = each.value.exemption_category
@@ -121,9 +125,10 @@ resource "azurerm_subscription_policy_exemption" "this" {
 
   name            = each.value.name
   subscription_id = each.value.scope
-  policy_assignment_id = coalesce(
-    each.value.policy_assignment_id,
-    try(azurerm_subscription_policy_assignment.this[replace(each.value.scope, "/subscriptions/", "")].id, null),
+  policy_assignment_id = (
+    each.value.policy_assignment_id != null ? each.value.policy_assignment_id :
+    each.value.extracted_subscription_id != null && contains(keys(azurerm_subscription_policy_assignment.this), each.value.extracted_subscription_id) ?
+    azurerm_subscription_policy_assignment.this[each.value.extracted_subscription_id].id :
     length(local.all_assignment_ids) > 0 ? local.all_assignment_ids[0] : null
   )
   exemption_category              = each.value.exemption_category
@@ -147,8 +152,10 @@ resource "azurerm_resource_group_policy_exemption" "this" {
 
   name              = each.value.name
   resource_group_id = each.value.scope
-  policy_assignment_id = coalesce(
-    each.value.policy_assignment_id,
+  policy_assignment_id = (
+    each.value.policy_assignment_id != null ? each.value.policy_assignment_id :
+    each.value.extracted_subscription_id != null && contains(keys(azurerm_subscription_policy_assignment.this), each.value.extracted_subscription_id) ?
+    azurerm_subscription_policy_assignment.this[each.value.extracted_subscription_id].id :
     length(local.all_assignment_ids) > 0 ? local.all_assignment_ids[0] : null
   )
   exemption_category              = each.value.exemption_category
