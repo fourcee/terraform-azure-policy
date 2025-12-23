@@ -1,4 +1,4 @@
-resource "azurerm_policy_set_definition" "this" {
+resource "azurerm_management_group_policy_set_definition" "this" {
   name                = var.name
   policy_type         = var.policy_type
   display_name        = var.display_name != null ? var.display_name : var.name
